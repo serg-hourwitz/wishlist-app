@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
+const isGitHubPages = process.env.GITHUB_REPOSITORY?.includes('wishlist-app');
+
 export default defineConfig({
   plugins: [react()],
-  base: '/wishlist-app/',
-})
+  base: isGitHubPages ? '/wishlist-app/' : '/',
+});
