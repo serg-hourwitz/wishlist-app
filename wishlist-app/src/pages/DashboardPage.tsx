@@ -1,113 +1,89 @@
 import { useState, useMemo } from 'react';
 import { useWishes } from '../context/WishesContext';
-import type { Wish } from '../context/WishesContext';
 import WishCard from '../components/WishCard';
 import WishFormModal from '../components/WishFormModal';
 import ConfirmModal from '../components/ConfirmModal';
-
-type DateFilter = 'Newest' | 'Oldest' | '';
-type PriceFilter = 'High to Low' | 'Low to High' | '';
-
-const PAGE_SIZE = 6; // кількість бажань на сторінку
+import FilterControls from '../components/FilterControls';
+import Button from '../components/Button';
+import Pagination from '../components/Pagination';
 
 export default function DashboardPage() {
-  const { wishes, remove, create, update, loading } = useWishes();
+  const { wishes, remove, create, update } = useWishes();
+
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const [dateFilter, setDateFilter] = useState<DateFilter>('Newest');
-  const [priceFilter, setPriceFilter] = useState<PriceFilter>('');
+  // filters
+  const [search, setSearch] = useState('');
+  const [dateSort, setDateSort] = useState('none');
+  const [priceSort, setPriceSort] = useState('none');
 
-  const [currentPage, setCurrentPage] = useState(1);
+  // pagination
+  const [page, setPage] = useState(1);
+  const perPage = 6;
 
-  // Сортування по одному активному фільтру
-  const filteredWishes = useMemo(() => {
-    let sorted = [...wishes];
+  const filtered = useMemo(() => {
+    let list = [...wishes];
 
-    if (dateFilter) {
-      sorted.sort((a, b) =>
-        dateFilter === 'Newest'
-          ? b.createdAt - a.createdAt
-          : a.createdAt - b.createdAt
-      );
-    } else if (priceFilter) {
-      sorted.sort((a, b) =>
-        priceFilter === 'High to Low' ? b.price - a.price : a.price - b.price
+    // search
+    if (search.trim()) {
+      list = list.filter((w) =>
+        w.title.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    return sorted;
-  }, [wishes, dateFilter, priceFilter]);
+    // --- SORTING ---
 
-  const totalPages = Math.ceil(filteredWishes.length / PAGE_SIZE);
-  const paginatedWishes = filteredWishes.slice(
-    (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
-  );
+    // 1️⃣ якщо вибрано сортування за датою → головне
+    if (dateSort === 'date_desc')
+      list.sort((a, b) => b.createdAt - a.createdAt);
 
-  const handleSubmit = (
-    data: Omit<Wish, 'id' | 'createdAt'> | Partial<Wish>
-  ) => {
-    if (editingId) update(editingId, data);
-    else create({ ...data, createdAt: Date.now() } as Omit<Wish, 'id'>);
-    setShowForm(false);
-    setEditingId(null);
-  };
+    if (dateSort === 'date_asc') list.sort((a, b) => a.createdAt - b.createdAt);
 
-  if (loading) return <div className="p-6">Loading...</div>;
+    // 2️⃣ якщо дата "none", але є ціна → сортуємо по ціні
+    if (dateSort === 'none') {
+      if (priceSort === 'price_desc') list.sort((a, b) => b.price - a.price);
+      if (priceSort === 'price_asc') list.sort((a, b) => a.price - b.price);
+    }
+
+    return list;
+  }, [wishes, search, dateSort, priceSort]);
+
+  const totalPages = Math.ceil(filtered.length / perPage);
+  const pageItems = filtered.slice((page - 1) * perPage, page * perPage);
 
   return (
     <div className="p-6">
-      <div className="flex justify-between mb-4 flex-wrap gap-2">
+      <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">Wishlist</h1>
-        <button
-          className="bg-green-500 text-white px-4 py-2 rounded"
-          onClick={() => setShowForm(true)}
-        >
+
+        <Button variant="success" onClick={() => setShowForm(true)}>
           Add Wish
-        </button>
+        </Button>
       </div>
 
-      <div className="flex gap-4 mb-4 flex-wrap">
-        <div>
-          <label className="mr-2 font-semibold">Date:</label>
-          <select
-            value={dateFilter}
-            onChange={(e) => {
-              setDateFilter(e.target.value as DateFilter);
-              setPriceFilter('');
-              setCurrentPage(1);
-            }}
-            className="border px-2 py-1 rounded"
-          >
-            <option value="">None</option>
-            <option value="Newest">Newest</option>
-            <option value="Oldest">Oldest</option>
-          </select>
-        </div>
-        <div>
-          <label className="mr-2 font-semibold">Price:</label>
-          <select
-            value={priceFilter}
-            onChange={(e) => {
-              setPriceFilter(e.target.value as PriceFilter);
-              setDateFilter('');
-              setCurrentPage(1);
-            }}
-            className="border px-2 py-1 rounded"
-          >
-            <option value="">None</option>
-            <option value="High to Low">High to Low</option>
-            <option value="Low to High">Low to High</option>
-          </select>
-        </div>
-      </div>
-
-      {paginatedWishes.length === 0 && <div>No wishes found</div>}
+      <FilterControls
+        search={search}
+        dateSort={dateSort}
+        priceSort={priceSort}
+        notFound={filtered.length === 0}
+        onSearchChange={(v) => {
+          setSearch(v);
+          setPage(1);
+        }}
+        onDateSortChange={(v) => {
+          setDateSort(v);
+          setPage(1);
+        }}
+        onPriceSortChange={(v) => {
+          setPriceSort(v);
+          setPage(1);
+        }}
+      />
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
-        {paginatedWishes.map((w) => (
+        {pageItems.map((w) => (
           <WishCard
             key={w.id}
             wish={w}
@@ -120,37 +96,10 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Пагінація */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-6 gap-2">
-          <button
-            className="px-3 py-1 border rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            Prev
-          </button>
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              className={`px-3 py-1 border rounded ${
-                currentPage === i + 1 ? 'bg-gray-300' : ''
-              }`}
-              onClick={() => setCurrentPage(i + 1)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="px-3 py-1 border rounded disabled:opacity-50"
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
-      )}
-
+      {/* Pagination */}
+      <Pagination page={page} totalPages={totalPages} onChange={setPage} />
+      
+      {/* Modals */}
       {showForm && (
         <WishFormModal
           initial={
@@ -160,13 +109,19 @@ export default function DashboardPage() {
             setShowForm(false);
             setEditingId(null);
           }}
-          onSubmit={handleSubmit}
+          onSubmit={(data) => {
+            editingId ? update(editingId, data) : create(data);
+            setShowForm(false);
+            setEditingId(null);
+          }}
         />
       )}
 
       {deleteId && (
         <ConfirmModal
-          message="Delete wish?"
+          message={`Do U really want to delete "${
+            wishes.find((w) => w.id === deleteId)?.title || ''
+          }" ?`}
           onCancel={() => setDeleteId(null)}
           onConfirm={() => {
             remove(deleteId);

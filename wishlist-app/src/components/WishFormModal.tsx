@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import type { Wish } from '../context/WishesContext';
+import Button from './Button';
+import FormInput from './FormInput';
 
 interface Props {
   initial?: Partial<Wish>;
@@ -15,45 +17,53 @@ export default function WishFormModal({ initial, onClose, onSubmit }: Props) {
     image: initial?.image ?? '',
   });
 
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit(form);
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded w-96 flex flex-col gap-3">
-        <input
-          className="border p-2"
-          placeholder="Title"
+      <form
+        className="bg-white p-6 rounded w-96 flex flex-col gap-3"
+        onSubmit={handleSubmit}
+      >
+        <FormInput
+          label="Title"
           value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          placeholder="Title"
+          onChange={(v) => setForm({ ...form, title: v })}
         />
-        <textarea
-          className="border p-2"
-          placeholder="Description"
+        <FormInput
+          label="Description"
           value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          placeholder="Description"
+          type="textarea"
+          onChange={(v) => setForm({ ...form, description: v })}
         />
-        <input
-          type="number"
-          className="border p-2"
-          placeholder="Price"
+        <FormInput
+          label="Price"
           value={form.price}
-          onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+          placeholder="Price"
+          type="number"
+          onChange={(v) => setForm({ ...form, price: Number(v) })}
         />
-        <input
-          className="border p-2"
-          placeholder="Image URL"
+        <FormInput
+          label="Image URL"
           value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
+          placeholder="Image URL"
+          onChange={(v) => setForm({ ...form, image: v })}
         />
 
-        <div className="flex justify-end gap-3">
-          <button onClick={onClose}>Cancel</button>
-          <button
-            className="bg-blue-500 text-white px-3 py-1 rounded"
-            onClick={() => onSubmit(form)}
-          >
+        <div className="flex justify-end gap-3 mt-2">
+          <Button variant="secondary" type="button" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button variant="primary" type="submit">
             Save
-          </button>
+          </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

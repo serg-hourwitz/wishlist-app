@@ -1,10 +1,23 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
+
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
+import { useState } from 'react';
 import { useWishes } from '../context/WishesContext';
+import ConfirmModal from '../components/ConfirmModal';
 
 export default function WishPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { wishes, remove, loading } = useWishes();
-  const nav = useNavigate();
+  const navigate = useNavigate();
+  const [params] = useSearchParams();
+  const currentPage = params.get('page') || '1';
+
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const wish = wishes.find((w) => w.id === id);
 
@@ -13,8 +26,8 @@ export default function WishPage() {
 
   return (
     <div className="p-6">
-      <Link to="/" className="text-blue-500 underline">
-        ← Back
+      <Link to={`/?page=${currentPage}`}>
+        <Button variant='success'>← Back</Button>
       </Link>
 
       <div className="mt-4 bg-white shadow p-6 rounded max-w-xl">
@@ -22,23 +35,25 @@ export default function WishPage() {
         <h1 className="text-2xl font-bold">{wish.title}</h1>
         <p className="mb-2">{wish.description}</p>
 
-        <div className="flex justify-between mt-4 items-center">
+        <div className="flex justify-between mt-4">
           <span className="font-bold">${wish.price}</span>
-          <span className="text-gray-500">
-            Added: {new Date(wish.createdAt).toLocaleString()}
-          </span>
 
-          <button
-            className="text-red-600"
-            onClick={() => {
-              remove(wish.id);
-              nav('/');
-            }}
-          >
+          <Button variant="danger" onClick={() => setShowConfirm(true)}>
             Delete
-          </button>
+          </Button>
         </div>
       </div>
+
+      {showConfirm && (
+        <ConfirmModal
+          message={`Do U really want to delete "${wish.title}"?`}
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => {
+            remove(wish.id);
+            navigate(`/?page=${currentPage}`);
+          }}
+        />
+      )}
     </div>
   );
 }
