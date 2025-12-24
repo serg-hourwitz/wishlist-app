@@ -27,17 +27,16 @@ export default function WishPage() {
   return (
     <div className="p-6">
       <Link to={`/?page=${currentPage}`}>
-        <Button variant='success'>← Back</Button>
+        <Button variant="success">← Back</Button>
       </Link>
 
       <div className="mt-4 bg-white shadow p-6 rounded max-w-xl">
-        <img src={wish.image} className="rounded mb-3" />
-        <h1 className="text-2xl font-bold">{wish.title}</h1>
-        <p className="mb-2">{wish.description}</p>
+        <img src={wish.image} className="rounded mb-5" />
+        <h1 className="text-2xl text-gray-900 font-bold mb-3">{wish.title}</h1>
+        <p className="mb-2 text-gray-700 font-semibold italic">{wish.description}</p>
+        <span className="font-bold text-2xl text-blue-800">${wish.price}</span>
 
-        <div className="flex justify-between mt-4">
-          <span className="font-bold">${wish.price}</span>
-
+        <div className="flex justify-end mt-4">
           <Button variant="danger" onClick={() => setShowConfirm(true)}>
             Delete
           </Button>

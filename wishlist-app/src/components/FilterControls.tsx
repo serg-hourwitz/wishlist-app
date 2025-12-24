@@ -23,7 +23,7 @@ export default function FilterControls({
 }: Props) {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col md:flex-row gap-4 mb-2">
+      <div className="flex flex-col md:flex-row gap-4 mb-28">
         <TextInput
           value={search}
           placeholder="Search wishes..."

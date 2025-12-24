@@ -1,4 +1,5 @@
 import type { ChangeEvent } from 'react';
+import './SelectStyles.css';
 
 interface Props {
   value: string;
@@ -10,7 +11,7 @@ export default function DateSortSelect({ value, onChange }: Props) {
     <select
       value={value}
       onChange={(e: ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)}
-      className="border p-2 rounded w-full md:w-1/3"
+      className="custom-select border-green-400 bg-green-50 text-green-400 p-2 rounded w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-green-400 font-bold"
     >
       <option value="none">Sort by date</option>
       <option value="date_desc">Newest first</option>
