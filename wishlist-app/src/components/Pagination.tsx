@@ -13,9 +13,19 @@ export default function Pagination({ page, totalPages, onChange }: Props) {
     <div className="flex justify-center items-center gap-3 mt-6">
       <Button
         variant="secondary"
-        className="disabled:opacity-50"
+        className="disabled:opacity-50 flex items-center gap-2"
         disabled={page === 1}
         onClick={() => onChange(page - 1)}
+        icon={
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M15 18l-6-6 6-6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        }
       >
         Prev
       </Button>
@@ -26,9 +36,19 @@ export default function Pagination({ page, totalPages, onChange }: Props) {
 
       <Button
         variant="secondary"
-        className="disabled:opacity-50"
+        className="disabled:opacity-50 flex items-center flex-row-reverse gap-2"
         disabled={page === totalPages}
         onClick={() => onChange(page + 1)}
+        icon={
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M9 6l6 6-6 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+        }
       >
         Next
       </Button>

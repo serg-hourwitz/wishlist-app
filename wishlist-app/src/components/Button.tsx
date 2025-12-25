@@ -7,12 +7,14 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
   children: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 export default function Button({
   variant = 'primary',
   size = 'md',
   className,
+  icon,
   children,
   ...rest
 }: Props) {
@@ -22,7 +24,7 @@ export default function Button({
     primary: 'bg-blue-500 text-white hover:bg-blue-600',
     secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
     danger: 'bg-red-500 text-white hover:bg-red-600',
-    success: 'bg-green-500 text-white hover:bg-green-600',
+    success: 'bg-[#7FB51E] text-white hover:bg-[#7AA900]',
   };
 
   const sizeStyles: Record<Size, string> = {
@@ -41,6 +43,7 @@ export default function Button({
       )}
       {...rest}
     >
+      {icon}
       {children}
     </button>
   );

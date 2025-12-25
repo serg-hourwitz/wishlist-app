@@ -1,14 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useApi } from '../api/useApi';
+import type {Wish} from '../types/type';
 
-export interface Wish {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
-  createdAt: number;
-}
 
 interface WishesContextProps {
   wishes: Wish[];

@@ -6,6 +6,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import FilterControls from '../components/FilterControls';
 import Button from '../components/Button';
 import Pagination from '../components/Pagination';
+import { Link } from 'react-router-dom';
 
 export default function DashboardPage() {
   const { wishes, remove, create, update } = useWishes();
@@ -21,31 +22,38 @@ export default function DashboardPage() {
 
   // pagination
   const [page, setPage] = useState(1);
-  const perPage = 6;
+  const perPage = 3;
 
   const filtered = useMemo(() => {
     let list = [...wishes];
 
-    // search
+    // SEARCH
     if (search.trim()) {
       list = list.filter((w) =>
         w.title.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    // --- SORTING ---
+    list.sort((a, b) => {
+      const dayA = new Date(a.createdAt).setHours(0, 0, 0, 0);
+      const dayB = new Date(b.createdAt).setHours(0, 0, 0, 0);
 
-    // 1️⃣ якщо вибрано сортування за датою → головне
-    if (dateSort === 'date_desc')
-      list.sort((a, b) => b.createdAt - a.createdAt);
+      // --- DATE SORT ---
+      if (dateSort !== 'none') {
+        const dateResult = dateSort === 'date_desc' ? dayB - dayA : dayA - dayB;
 
-    if (dateSort === 'date_asc') list.sort((a, b) => a.createdAt - b.createdAt);
+        if (dateResult !== 0) return dateResult;
+      }
 
-    // 2️⃣ якщо дата "none", але є ціна → сортуємо по ціні
-    if (dateSort === 'none') {
-      if (priceSort === 'price_desc') list.sort((a, b) => b.price - a.price);
-      if (priceSort === 'price_asc') list.sort((a, b) => a.price - b.price);
-    }
+      // --- PRICE SORT ---
+      if (priceSort !== 'none') {
+        return priceSort === 'price_desc'
+          ? b.price - a.price
+          : a.price - b.price;
+      }
+
+      return 0;
+    });
 
     return list;
   }, [wishes, search, dateSort, priceSort]);
@@ -54,35 +62,83 @@ export default function DashboardPage() {
   const pageItems = filtered.slice((page - 1) * perPage, page * perPage);
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-bold">Wishlist</h1>
+    <div className="py-6 px-2 sm:px-6 lg:px-12">
+      <div className="flex mb-14 flex-col md:flex-row items-center p-6 bg-gray-700 rounded">
+        <Link
+          to="https://en.wikipedia.org/wiki/Robert_Burton_(scholar)"
+          target="_blank"
+          rel="noopener noreferrer"
+          className='w-full'
+        >
+          <img
+            className="rounded w-full"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Burton_grand.jpg/250px-Burton_grand.jpg"
+            alt=" Robert Burton"
+          />
+        </Link>
+        <div className="p-4">
+          <h1 className="mb-4">
+            <blockquote className="text-4xl sm:text-6xl font-bold italic">
+              "Desire hath no rest"
+            </blockquote>
+          </h1>
+          <p>
+            Robert Burton, an English scholar and writer of the 17th century, in
+            his magnum opus "Anatomy of Melancholy", viewed desire as an endless
+            and insatiable force, a source of melancholy and passions, comparing
+            it to eternal torture, where there is no rest, leading to suffering,
+            but at the same time being a driving force for man, pushed by the
+            "good" and "evil" angels. 
+          </p>
+        </div>
+      </div>
 
-        <Button variant="success" onClick={() => setShowForm(true)}>
+      <div className="flex justify-between items-center mb-28 flex-col-reverse sm:flex-row gap-4">
+        <FilterControls
+          search={search}
+          dateSort={dateSort}
+          priceSort={priceSort}
+          notFound={filtered.length === 0}
+          onSearchChange={(v) => {
+            setSearch(v);
+            setPage(1);
+          }}
+          onDateSortChange={(v) => {
+            setDateSort(v);
+            setPage(1);
+          }}
+          onPriceSortChange={(v) => {
+            setPriceSort(v);
+            setPage(1);
+          }}
+        />
+        <Button
+          className="flex items-center gap-3"
+          variant="success"
+          size="lg"
+          onClick={() => setShowForm(true)}
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="white"
+              strokeWidth="2"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          }
+        >
           Add Wish
         </Button>
       </div>
 
-      <FilterControls
-        search={search}
-        dateSort={dateSort}
-        priceSort={priceSort}
-        notFound={filtered.length === 0}
-        onSearchChange={(v) => {
-          setSearch(v);
-          setPage(1);
-        }}
-        onDateSortChange={(v) => {
-          setDateSort(v);
-          setPage(1);
-        }}
-        onPriceSortChange={(v) => {
-          setPriceSort(v);
-          setPage(1);
-        }}
-      />
-
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {pageItems.map((w) => (
           <WishCard
             key={w.id}
@@ -98,7 +154,7 @@ export default function DashboardPage() {
 
       {/* Pagination */}
       <Pagination page={page} totalPages={totalPages} onChange={setPage} />
-      
+
       {/* Modals */}
       {showForm && (
         <WishFormModal

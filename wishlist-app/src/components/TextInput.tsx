@@ -16,17 +16,17 @@ export default function TextInput({ value, placeholder, onChange }: Props) {
         }
         placeholder={placeholder}
         className="
-          border border-green-400 bg-green-50 text-green-900
-          placeholder-green-400
+          border border-[#7FB51E] bg-green-50 text-[#7FB51E]
+          placeholder-[#7FB51E] font-bold
           p-2 pr-8 rounded w-full
-          focus:outline-none focus:ring-2 focus:ring-green-400
+          focus:outline-none focus:ring-2 focus:ring-[#7FB51E]
         "
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange('')}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500 hover:text-green-700"
+          className="absolute right-2 top-1/2 -translate-y-1/2 text-[#7FB51E] hover:text-[#6e9c17]"
         >
           ✕
         </button>

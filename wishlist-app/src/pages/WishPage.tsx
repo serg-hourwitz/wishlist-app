@@ -26,14 +26,36 @@ export default function WishPage() {
 
   return (
     <div className="p-6">
-      <Link to={`/?page=${currentPage}`}>
-        <Button variant="success">← Back</Button>
+      <Link className='flex justify-center' to={`/?page=${currentPage}`}>
+        <Button
+          className='flex items-center gap-2'
+          variant="success"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          } 
+        >
+          Back to Dashboard
+        </Button>
       </Link>
 
-      <div className="mt-4 bg-white shadow p-6 rounded max-w-xl">
+      <div className="mt-4 bg-gray-300 shadow p-6 rounded max-w-xl">
         <img src={wish.image} className="rounded mb-5" />
         <h1 className="text-2xl text-gray-900 font-bold mb-3">{wish.title}</h1>
-        <p className="mb-2 text-gray-700 font-semibold italic">{wish.description}</p>
+        <p className="mb-2 text-gray-700 font-semibold italic">
+          {wish.description}
+        </p>
         <span className="font-bold text-2xl text-blue-800">${wish.price}</span>
 
         <div className="flex justify-end mt-4">

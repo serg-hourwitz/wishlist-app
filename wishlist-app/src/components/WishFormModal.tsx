@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import type { Wish } from '../context/WishesContext';
+import type { Wish } from '../types/type';
 import Button from './Button';
 import FormInput from './FormInput';
 
@@ -24,11 +24,17 @@ export default function WishFormModal({ initial, onClose, onSubmit }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <form
-        className="bg-white p-6 rounded w-96 flex flex-col gap-3"
+        className="bg-gray-300 p-6 rounded w-96 flex flex-col gap-4 shadow-lg"
         onSubmit={handleSubmit}
       >
+        <h2 className="text-xl font-bold text-[#3e5a09] text-center">
+          {initial
+            ? "Don't hold back your desires!"
+            : "Don't give up on your desires!"}
+        </h2>
+
         <FormInput
           label="Title"
           value={form.title}

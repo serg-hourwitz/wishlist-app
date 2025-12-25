@@ -1,31 +1,32 @@
 import type { ChangeEvent } from 'react';
 
 interface Props {
-  label?: string;
+  label: string;
   value: string | number;
+  type?: 'text' | 'number' | 'textarea';
   placeholder?: string;
-  type?: string;
-  required?: boolean;
   onChange: (value: string) => void;
 }
 
 export default function FormInput({
   label,
   value,
-  placeholder,
   type = 'text',
-  required = true,
+  placeholder,
   onChange,
 }: Props) {
+  const commonClasses =
+    'border border-[#7FB51E] bg-green-50 text-[#7FB51E] placeholder-[#7FB51E] p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-[#7FB51E]';
+
   return (
-    <div className="flex flex-col">
-      {label && <label className="font-medium">{label}</label>}
+    <div className="flex flex-col gap-1">
+      <label className="font-semibold text-[#7FB51E]">{label}</label>
       {type === 'textarea' ? (
         <textarea
-          className="border p-2"
-          placeholder={placeholder}
           value={value}
-          required={required}
+          placeholder={placeholder}
+          required
+          className={`${commonClasses} resize-none`}
           onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
             onChange(e.target.value)
           }
@@ -33,10 +34,10 @@ export default function FormInput({
       ) : (
         <input
           type={type}
-          className="border p-2"
-          placeholder={placeholder}
           value={value}
-          required={required}
+          placeholder={placeholder}
+          required
+          className={commonClasses}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             onChange(e.target.value)
           }
