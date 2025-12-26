@@ -11,7 +11,7 @@
     {
       "id": "ad2c",
       "title": "New Job",
-      "description": "I'm going to try something truly new!",
+      "description": "\"Choose a job you love, and you will never have to work a day in your life,\" Confucius",
       "price": 1000000,
       "image": "https://lh3.googleusercontent.com/p/AF1QipN6SIclxqHgZim-oPr3VcC118mtF5oETUDXN-Sp=s1360-w1360-h1020-rw",
       "createdAt": 1766499493627
@@ -19,7 +19,7 @@
     {
       "id": "237a",
       "title": "New Boss",
-      "description": "Another description",
+      "description": "\"If our boss does us no harm, that is already a considerable blessing.\"\n— Pierre de Beaumarchais (1732–1799), French playwright and publicist",
       "price": 1000000,
       "image": "https://lh3.googleusercontent.com/p/AF1QipOw-v0QCXQ1Co7Dk20tTYPi6OTFJKiTmbPEnJ9E=s1360-w1360-h1020-rw",
       "createdAt": 1766500631446
@@ -27,7 +27,7 @@
     {
       "id": "b7bd",
       "title": "New Team",
-      "description": "Together towards new achievements!",
+      "description": "\"If everyone moves forward together, success will take care of itself.\" - Henry Ford",
       "price": 1000000,
       "image": "https://s.dou.ua/CACHE/images/img/static/gallery2/Screenshot_at_Dec_09_21-16-22_FNSgKu3/078d5e2d4ce9b6b77e53e6b46219c61e.jpg",
       "createdAt": 1766505131126
@@ -43,15 +43,15 @@
     {
       "id": "8b26",
       "title": "Vacations in a mountains",
-      "description": "To find myselfwww",
+      "description": "To find myself",
       "price": 1000,
       "image": "http://batona.net/uploads/posts/2025-12/1766745592_25.jpg",
       "createdAt": 1766748074653
     },
     {
       "id": "602e",
-      "title": "1",
-      "description": "q",
+      "title": "The rule for every day",
+      "description": "to go through this process from start to finish every time",
       "price": 0,
       "image": "https://scontent.flwo3-1.fna.fbcdn.net/v/t39.30808-6/486688066_973541771641486_7948893347139786731_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=110&ccb=1-7&_nc_sid=aa7b47&_nc_ohc=KgKjEEWQd5kQ7kNvwFw1SvK&_nc_oc=AdkmQRwJXFUCuTxnTv97m0XuhQV9VYedrj-V0PPvdMXWQ-CpEmN9vhYzJ45_Anr4JEM&_nc_zt=23&_nc_ht=scontent.flwo3-1.fna&_nc_gid=6fRaWgRP6HZamo46DkZyLQ&oh=00_AflTHfDVYffIcLSW55spbGebXaTmEpEoZPAdfCKBLcVPUQ&oe=69543E14",
       "createdAt": 1766749883084
