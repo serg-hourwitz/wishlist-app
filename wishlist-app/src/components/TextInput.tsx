@@ -18,7 +18,7 @@ export default function TextInput({ value, placeholder, onChange }: Props) {
         className="
           border border-[#7FB51E] bg-green-50 text-[#7FB51E]
           placeholder-[#7FB51E] font-bold
-          p-2 pr-8 rounded w-full
+          p-4 pr-8 rounded w-full
           focus:outline-none focus:ring-2 focus:ring-[#7FB51E]
         "
       />
