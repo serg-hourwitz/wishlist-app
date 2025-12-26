@@ -1,73 +1,157 @@
-# React + TypeScript + Vite
+# ✨ Wishlist App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern **Wishlist Application** built with **React + Vite**, powered by a **fake REST API** using `json-server`.  
+Users can **create, edit, delete, search, and sort** wishlist items with a simple and friendly UI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📁 Project Structure
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Expanding the ESLint configuration
+wishlist-app/
+├── db.json # database for json-server
+├── package.json # dependencies and scripts
+├── vite.config.js # Vite configuration
+├── src/ # frontend source code
+└── ...
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Local Setup
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 1️⃣ Clone the repository
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+git clone <YOUR_REPOSITORY_URL>
+cd wishlist-app
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2️⃣ Install dependencies
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Install dependencies
+
+### 3️⃣ Run the backend (json-server)
+
+npm run server
+
+- The fake API will be available at: http://localhost:3001/wishes
+
+- db.json is used as the database.
+
+### 4️⃣ Run the frontend (React + Vite)
+
+npm run dev
+
+🌍 Open in your browser: http://localhost:5173/
+
+- The frontend automatically connects to the backend at http://localhost:3001/wishes.
+
+🧰 Scripts
+
+| Command           | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `npm run dev`     | Start the frontend in development mode (Vite) |
+| `npm run build`   | Build the production version of the frontend  |
+| `npm run preview` | Preview the production build locally          |
+| `npm run server`  | Start the fake REST API using json-server     |
+| `npm run lint`    | Run ESLint to check code style and errors     |
+
+
+🛠️ Technologies
+
+⚛️ React 19
+
+⚡ Vite
+
+🎨 Tailwind CSS
+
+🧾 TypeScript
+
+🧾 json-server (fake REST API)
+
+🧩 clsx (for conditional class names)
+
+
+
+🌐 Deployment
+Complete instructions to deploy both frontend and backend
+
+
+Frontend on GitHub Pages
+
+1️⃣ Make sure vite.config.js contains the correct base for GitHub Pages:
+
+const isGitHubPages = process.env.GITHUB_REPOSITORY?.includes('wishlist-app');
+
+export default defineConfig({
+  plugins: [react()],
+  base: isGitHubPages ? '/wishlist-app/' : '/',
+});
+
+
+2️⃣ Commit and push to the main branch.
+3️⃣ GitHub Actions workflow (.github/workflows/deploy.yml) example:
+
+name: Deploy Wishlist App to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+        working-directory: ./wishlist-app
+      - run: npm run build
+        working-directory: ./wishlist-app
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./wishlist-app/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+4️⃣ Your app will be deployed at https://<USERNAME>.github.io/wishlist-app/.
+
+
+🗄️ Backend on Render https://render.com
+
+1. Go to Render and create a new Web Service.
+
+2. Connect your repository with the backend (db.json + package.json).
+
+3. Set the Start Command to:
+
+npx json-server --watch db.json --port 10000
+
+4. Set the Environment to Node 20 (or latest stable).
+
+5. Render will provide a URL, e.g. https://wishlist-backend.onrender.com/wishes.
+
+6. Update src/useApi.ts to point to the deployed backend:
+
+const base = 'https://wishlist-backend.onrender.com/wishes';
+
+
+📝 Notes
+
+✔ Frontend GitHub Pages base path does not affect local development
+✔ json-server supports full CRUD
+✔ Render free tier may sleep — first request may be slow
+
+
+❤️ Enjoy!
+
+If you like the project — ⭐ Star it & contribute!
